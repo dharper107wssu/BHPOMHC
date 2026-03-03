@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMHC Transition Framework | Maryland</title>
+<style>
+/*
+  ══════════════════════════════════════════════════════
+  ZERO JAVASCRIPT — Works in Google Drive, email,
+  iMessage, Dropbox, OneDrive, Safari, Chrome, Firefox.
+  Tabs use CSS radio trick. Accordions use <details>.
+  No download required. Open directly from Drive link.
+  ══════════════════════════════════════════════════════
+*/
+
+:root {
+  --ink:    #1c1f26;
+  --paper:  #f5f2ec;
+  --cream:  #ede8df;
+  --rule:   #d4cfc6;
+  --navy:   #1e2d4a;
+  --teal:   #1d7a6e;
+  --teal-l: #2aaa99;
+  --amber:  #b5621a;
+  --slate:  #4a5568;
+  --red:    #7a2020;
+  --gold:   #a07a20;
+  --purple: #4a2070;
+  --sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --serif:  Georgia, 'Times New Roman', serif;
+  --mono:   'Courier New', Courier, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── MASTHEAD ── */
+.masthead {
+  background: var(--navy);
+  color: #f0ece4;
+  padding: 28px 24px 22px;
+  border-bottom: 4px solid var(--teal);
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--teal-l);
+  margin-bottom: 8px;
+}
+.masthead h1 {
+  font-family: var(--serif);
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.masthead p { font-size: 13px; color: #9aadca; max-width: 640px; }
+.badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.badge {
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 3px;
+  padding: 3px 9px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: #9aadca;
+  letter-spacing: 1px;
+}
+
+/* ══════════════════════════════════════════════
+   PURE CSS TABS — radio inputs + label trick
+   Works in every browser, no JS needed
+   ══════════════════════════════════════════════ */
+
+/* Hide radio inputs but keep them functional */
+.tab-radio { display: none; }
+
+/* Tab label bar */
+.tab-bar {
+  background: var(--navy);
+  display: flex;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.tab-label {
+  color: #7a9ab8;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  padding: 13px 13px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+.tab-label:hover { color: #b8cce0; }
+
+/* When radio is checked, highlight its label */
+#t1:checked ~ .tab-bar label[for="t1"],
+#t2:checked ~ .tab-bar label[for="t2"],
+#t3:checked ~ .tab-bar label[for="t3"],
+#t4:checked ~ .tab-bar label[for="t4"],
+#t5:checked ~ .tab-bar label[for="t5"],
+#t6:checked ~ .tab-bar label[for="t6"],
+#t7:checked ~ .tab-bar label[for="t7"],
+#t8:checked ~ .tab-bar label[for="t8"],
+#t9:checked ~ .tab-bar label[for="t9"] {
+  color: var(--teal-l);
+  border-bottom-color: var(--teal-l);
+}
+
+/* All panels hidden by default */
+.tab-panel { display: none; }
+
+/* Show correct panel based on which radio is checked */
+#t1:checked ~ .panels > #p1,
+#t2:checked ~ .panels > #p2,
+#t3:checked ~ .panels > #p3,
+#t4:checked ~ .panels > #p4,
+#t5:checked ~ .panels > #p5,
+#t6:checked ~ .panels > #p6,
+#t7:checked ~ .panels > #p7,
+#t8:checked ~ .panels > #p8,
+#t9:checked ~ .panels > #p9 { display: block; }
+
+.panels { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+
+/* ── SECTION HEADER ── */
+.sec-head { border-left: 5px solid var(--teal); padding: 2px 0 2px 16px; margin-bottom: 24px; }
+.sec-head h2 { font-family: var(--serif); font-size: clamp(18px,3vw,24px); font-weight: 700; color: var(--navy); }
+.sec-head p { font-size: 13px; color: var(--slate); margin-top: 5px; max-width: 680px; }
+
+/* ── PHASE CARDS ── */
+.phase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px,1fr)); gap: 14px; margin-bottom: 24px; }
+.phase-card { background: white; border: 1px solid var(--rule); border-radius: 6px; padding: 20px; }
+.phase-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; margin-bottom: 5px; }
+.phase-card h3 { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 7px; }
+.phase-card p { font-size: 13px; color: var(--slate); line-height: 1.55; }
+.phase-foot { margin-top: 10px; font-family: var(--mono); font-size: 10px; }
+
+/* ── DETAILS / SUMMARY (native HTML accordions — no JS) ── */
+details {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+details[open] summary { border-bottom: 1px solid var(--rule); }
+summary {
+  padding: 13px 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--navy);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; font-size: 18px; color: var(--slate); flex-shrink: 0; margin-left: 8px; }
+details[open] summary::after { content: '−'; }
+summary:hover { background: var(--cream); }
+.detail-body { padding: 14px 16px; }
+
+.domain-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 10px; }
+
+/* ── ACTION ITEMS ── */
+.ai { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 9px; }
+.adot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.atxt { font-size: 13px; color: #3a4455; line-height: 1.55; }
+
+/* ── CALLOUT ── */
+.callout { border-left: 4px solid; border-radius: 0 5px 5px 0; padding: 12px 16px; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 20px; }
+table.data { width: 100%; border-collapse: collapse; min-width: 580px; }
+table.data th { background: var(--navy); color: #c8d8e8; font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; padding: 10px 12px; text-align: left; }
+table.data td { padding: 10px 12px; font-size: 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.data tr:nth-child(even) td { background: var(--cream); }
+.lbadge { display: inline-block; font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 3px; font-weight: 700; white-space: nowrap; }
+
+/* ── SYSTEMS MAP ── */
+.smap { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+@media(max-width:820px) {
+  .smap { grid-template-columns: 1fr; }
+  .scol { border-right: none !important; border-bottom: 1px solid var(--rule); padding: 0 0 20px !important; margin-bottom: 20px; }
+}
+.scol { padding: 0 18px; border-right: 1px solid var(--rule); }
+.scol:first-child { padding-left: 0; }
+.scol:last-child { border-right: none; padding-right: 0; }
+.scol-hd { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; margin-bottom: 12px; font-weight: 700; }
+.snode { background: white; border: 1px solid var(--rule); border-radius: 5px; padding: 11px 13px; margin-bottom: 8px; }
+.snode-t { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.snode-d { font-size: 11px; color: var(--slate); line-height: 1.5; }
+.stag { display: inline-block; font-family: var(--mono); font-size: 8px; padding: 2px 5px; border-radius: 3px; margin-top: 4px; }
+.arr-row { display: flex; align-items: center; gap: 7px; background: var(--cream); border-radius: 4px; padding: 5px 10px; margin: 4px 0; font-size: 11px; color: var(--slate); }
+
+/* ── HANDOFF GRID ── */
+.hoff-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 10px; margin-top: 14px; }
+.hoff-card { background: white; border: 1px solid var(--rule); border-radius: 5px; padding: 13px; }
+.hoff-t { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.hoff-d { font-size: 12px; color: var(--slate); line-height: 1.5; }
+
+/* ── FLOW STEPS ── */
+.flow { display: flex; flex-direction: column; }
+.fstep { display: flex; gap: 0; align-items: stretch; }
+.fline { width: 34px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.fcircle { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; }
+.fconn { width: 2px; flex: 1; min-height: 14px; background: var(--rule); }
+.fcontent { flex: 1; padding: 0 0 16px 12px; }
+.fcontent h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.fcontent p { font-size: 12px; color: var(--slate); line-height: 1.55; }
+.ftags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.ftag { font-family: var(--mono); font-size: 9px; padding: 2px 7px; border-radius: 3px; }
+
+/* ── COMPLIANCE GRID & CHECKBOXES ── */
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:640px) { .comp-grid { grid-template-columns: 1fr; } }
+.comp-card { background: white; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.comp-head { padding: 12px 16px; font-size: 13px; font-weight: 700; }
+.comp-body { padding: 14px 16px; }
+
+/* Checkbox items — native HTML checkboxes, no JS */
+.citem { display: flex; gap: 9px; align-items: flex-start; margin-bottom: 8px; }
+.citem input[type="checkbox"] {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: var(--teal);
+  border-radius: 3px;
+}
+.ctxt { font-size: 12px; color: #3a4455; line-height: 1.5; flex: 1; }
+.cpill { font-family: var(--mono); font-size: 8px; padding: 1px 6px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+
+/* ── DIVIDER ── */
+hr.div { border: none; border-top: 1px solid var(--rule); margin: 22px 0; }
+.sub-title { font-family: var(--serif); font-size: 17px; font-weight: 700; color: var(--navy); margin: 24px 0 12px; padding-bottom: 7px; border-bottom: 1px solid var(--rule); }
+
+/* ── PRINT ── */
+@media print {
+  .tab-bar { display: none; }
+  .tab-panel { display: block !important; }
+  .panels { padding: 0; max-width: 100%; }
+  details[open], details { page-break-inside: avoid; }
+  .detail-body { display: block !important; }
+  body { font-size: 11px; }
+  .smap { grid-template-columns: 1fr; }
+  .scol { border: none; padding: 0; }
+}
+
+/* ── MOBILE ── */
+@media(max-width:600px) {
+  .masthead { padding: 20px 16px 18px; }
+  .panels { padding: 20px 12px 60px; }
+  .phase-grid { grid-template-columns: 1fr; }
+  .domain-grid { grid-template-columns: 1fr; }
+  .tab-label { padding: 11px 10px; font-size: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Radio inputs MUST be outside everything for CSS sibling selectors to work -->
+<input class="tab-radio" type="radio" name="tabs" id="t1" checked>
+<input class="tab-radio" type="radio" name="tabs" id="t2">
+<input class="tab-radio" type="radio" name="tabs" id="t3">
+<input class="tab-radio" type="radio" name="tabs" id="t4">
+<input class="tab-radio" type="radio" name="tabs" id="t5">
+<input class="tab-radio" type="radio" name="tabs" id="t6">
+<input class="tab-radio" type="radio" name="tabs" id="t7">
+<input class="tab-radio" type="radio" name="tabs" id="t8">
+<input class="tab-radio" type="radio" name="tabs" id="t9">
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="eyebrow">Maryland OMHC · Strategic Operations Framework</div>
+  <h1>Group Practice → OMHC<br>Transition &amp; Systems Guide</h1>
+  <p>Prescribing · Psychological Testing · Psychotherapy across Licensure Levels · ACTT · Supported Employment · ACHC Accreditation · Maryland COMAR Compliance</p>
+  <div class="badges">
+    <span class="badge">ACHC ACCREDITATION</span>
+    <span class="badge">MARYLAND COMAR</span>
+    <span class="badge">IPS FIDELITY</span>
+    <span class="badge">ACTT MODEL</span>
+    <span class="badge">MULTI-LICENSURE</span>
+    <span class="badge">NO DOWNLOAD NEEDED</span>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <label class="tab-label" for="t1">Overview</label>
+  <label class="tab-label" for="t2">Systems Map</label>
+  <label class="tab-label" for="t3">Prescribing</label>
+  <label class="tab-label" for="t4">Psych Testing</label>
+  <label class="tab-label" for="t5">Therapy &amp; Licensure</label>
+  <label class="tab-label" for="t6">ACTT</label>
+  <label class="tab-label" for="t7">Supported Employment</label>
+  <label class="tab-label" for="t8">ACHC Accreditation</label>
+  <label class="tab-label" for="t9">Maryland Compliance</label>
+</div>
+
+<div class="panels">
+
+<!-- ══════════ P1: OVERVIEW ══════════ -->
+<div id="p1" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--navy)">
+    <h2>Transition Game Plan — 6 Phases</h2>
+    <p>Sequenced by dependency. Expand any domain below each phase card to see full action items.</p>
+  </div>
+
+  <!-- Phase 1 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--navy); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--navy)">PHASE 01 · MONTHS 1–3</div>
+      <h3>Foundation &amp; Governance</h3>
+      <p>OMHC licensure, ACHC application, org structure, policy architecture, legal entity setup.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--navy)"><summary>Licensure &amp; Accreditation</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Call OHCQ (410-402-8000) to request a pre-application meeting before filing your OMHC application</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">File OMHC licensure application with OHCQ under COMAR 10.21.20; site inspection required before seeing clients</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Purchase ACHC Behavioral Health Standards manual from achc.org; begin gap analysis immediately</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Designate Accreditation Coordinator; schedule ACHC pre-survey consultation (available to new applicants)</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Obtain Type 2 NPI (organization NPI) — separate from individual provider NPIs</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Engage Maryland healthcare attorney to review governance documents and consent forms against COMAR and HG statutes</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--navy)"><summary>Governance &amp; Leadership</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Designate Clinical Director meeting COMAR qualifications: LCSW-C, Licensed Psychologist, MD, or equivalent</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Define Medical Director role and scope; document NP collaborative agreements per current Maryland law</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Create org chart with outpatient, ACTT, and Supported Employment as distinct program lines</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Establish QA/QI Committee: charter, membership, meeting cadence, reporting authority to governing body</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Define Board or Advisory oversight; document meeting schedule and minute-keeping requirements</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--navy)"><summary>Policy &amp; Procedure Architecture</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Build master policy index organized by domain: clinical, HR, compliance, billing, safety, emergency</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Draft P&amp;P governance workflow: who writes, who reviews, who approves, annual review cycle minimum</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Implement document control: version numbers, effective dates, sunset reviews, staff attestation tracking</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Distinguish program-specific policies (ACTT, IPS, testing) from organization-wide policies</div></div>
+        <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Complete policy gap analysis: compare current documents to ACHC standards AND COMAR 10.21.20 requirements</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--teal); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--teal)">PHASE 02 · MONTHS 2–5</div>
+      <h3>Clinical Systems</h3>
+      <p>Prescribing, psychological testing, psychotherapy, multi-licensure workflows, EHR build.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--teal)"><summary>Prescribing Systems</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Register all prescribers with Maryland CRISP for PDMP access before they see any clients</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Establish e-prescribing with EPCS capability (required by Maryland law for controlled substances)</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Define prescriber role in interdisciplinary team — embedded team member, not independent practitioner</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Build prescribing protocols: new evals, med management frequency, after-hours on-call, lab monitoring</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Create warm handoff workflows: therapist to prescriber (urgent + routine) and prescriber to ACTT team</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--teal)"><summary>Psychological Testing Systems</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Credential Licensed Psychologist; define testing scope, supervision of Psychologist Assistants, and referral workflow</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Establish prior authorization workflow for testing — obtained before scheduling, not after</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Create test security and materials management policy with restricted-access storage</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Build report distribution protocol: report goes to referring clinician, prescriber, and ACTT lead within defined timeframe</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--teal)"><summary>Psychotherapy &amp; Multi-Licensure</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Map all licensure levels on staff; define supervision requirements for each pre-licensed clinician</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Build supervision infrastructure: written agreements, logs, co-signature workflows in EHR</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Verify every clinician's license with their Maryland Board before they see clients under your OMHC</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Create note templates by service type: individual, group, family, telehealth — each has different billing requirements</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Define after-hours path for pre-licensed clinicians to reach supervisor for urgent clinical questions</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--teal)"><summary>EHR &amp; Documentation Build</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Audit EHR for OMHC billing code compatibility: H codes, T codes, CPT codes, modifiers</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Build note templates: biopsychosocial intake, ITP, progress notes by service type and licensure level</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Implement co-signature workflow for supervised clinicians — billing held until supervisor co-signs</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Create dashboards: overdue notes, unsigned orders, expired treatment plans, pending labs</div></div>
+        <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Define note completion policy: timeframe from service delivery + consequences for non-compliance</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--purple); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--purple)">PHASE 03 · MONTHS 3–8</div>
+      <h3>ACTT Program Development</h3>
+      <p>BHA program approval required before billing. Fidelity staffing, field operations, 24/7 coverage.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--purple)"><summary>BHA Approval &amp; Fidelity Model</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Contact Maryland BHA Technical Assistance Center (BHTAC) — free consultation before building program</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Obtain Maryland BHA ACTT program approval before billing any ACTT-specific codes</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Complete OHCQ ACTT program licensing under COMAR 10.21.17</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Obtain TMACT fidelity scale; build team composition to meet fidelity requirements</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Create ACTT-specific job descriptions; build daily morning huddle and weekly treatment review structures</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--purple)"><summary>Staffing &amp; Daily Operations</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Hire to full team composition: Team Leader (LCSW-C/LPC), Psychiatrist/CRNP-PMH, RN, Vocational Specialist, Peer Specialist</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Caseload max 1:10 per FTE at full fidelity; rotation-based visit assignment (not caseload-based)</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Same-day documentation standard: all field contacts documented and billed by end of day</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">24/7 on-call schedule documented: all roles covered, backup chain defined, prescriber reachable</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--purple)"><summary>Referral, Enrollment &amp; MOUs</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Define admission criteria aligned with TMACT and BHA standards (SMI, multiple hospitalizations, failed outpatient)</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Build referral pipelines: hospital discharge planners, courts, jails, community mental health</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Execute MOUs before opening: hospitals, crisis centers, jails, housing authorities, pharmacies</div></div>
+        <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Define step-down criteria (12+ months stability) and formal overlapping transition plan</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--amber); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--amber)">PHASE 04 · MONTHS 4–8</div>
+      <h3>Supported Employment (IPS)</h3>
+      <p>BHA program approval + DORS partnership required. IPS embedded in clinical teams — not a referral service.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--amber)"><summary>IPS Model Setup</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Contact BHA BHTAC for IPS program approval process — required before billing H2023</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Hire Employment Specialists; fund IPS Specialist certification pathway</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Embed Employment Specialists in ACTT morning meeting and outpatient team meetings — not a referral silo</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Zero Exclusion Policy documented in P&amp;P: any client who wants to work is eligible regardless of symptom severity</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Rapid job search begins within 30 days of IPS enrollment — no lengthy pre-vocational programs</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--amber)"><summary>DORS &amp; Employer Partnership</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Establish Maryland DORS partnership; enroll all eligible clients for VR co-enrollment and braided funding</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment Specialists spend 65%+ of time in community doing employer development — not in office</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Build employer relationship tracking system; document client disclosure preferences</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Engage WIPA counselors for benefits analysis before every job placement</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--amber)"><summary>Clinical Integration &amp; Outcomes</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment goal included in every willing client's ITP; reviewed at every ITP meeting</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Prescriber asks about work schedule at every medication visit; documents endorsement of employment goal</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Track monthly: clients enrolled, working, jobs obtained, hours, wages, 90-day job retention rate</div></div>
+        <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">IPS fidelity self-assessment semi-annually using IPS Fidelity Scale (25-item); share with QI committee</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- Phase 5 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--gold); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--gold)">PHASE 05 · MONTHS 2–6</div>
+      <h3>Revenue &amp; Billing Infrastructure</h3>
+      <p>OMHC billing requires organizational credentialing and code sets entirely different from group practice.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--gold)"><summary>Credentialing &amp; Payer Contracts</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Enroll organization as OMHC with Maryland Medicaid under Type 2 NPI — separate from individual providers</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Contract with all Maryland HealthChoice MCOs individually: BCBS, Aetna Better, CareFirst, UHC, Jai Medical, Priority</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Map new OMHC-eligible service codes vs. group practice codes — they are not the same; new codes require new credentialing</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">BHA program approval for ACTT and IPS before billing their specific service codes</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--gold)"><summary>Billing Workflow Design</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Build charge capture workflows for each program: outpatient, ACTT, psych testing, supported employment</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Define billing rules: who can bill what, supervision ratios affecting billing, modifier requirements</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Prior authorization tracking dashboard: by payer, service type, and expiration date</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">No claim submitted until note is signed; supervised staff — no claim until supervisor co-signs</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Timely filing: Maryland Medicaid 12 months; document per-MCO limits in billing policy</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--gold)"><summary>Financial Sustainability</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Model revenue projections per program with realistic 6–12 month ramp-up periods before cash flow stabilizes</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Identify SAMHSA, Maryland BHA, and foundation grants for ACTT and IPS startup</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Sliding fee scale meeting Maryland OMHC requirements for uninsured clients</div></div>
+        <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Financial dashboard: collections rate, denial rate, days in AR, revenue per program — reviewed monthly</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <!-- Phase 6 -->
+  <div style="margin-bottom:8px">
+    <div class="phase-card" style="border-top:3px solid var(--red); margin-bottom:10px">
+      <div class="phase-num" style="color:var(--red)">PHASE 06 · ONGOING</div>
+      <h3>Quality &amp; Integration</h3>
+      <p>Quality is an operating principle embedded in every workflow — not a quarterly event or separate department.</p>
+    </div>
+    <div class="domain-grid">
+      <details style="border-left:3px solid var(--red)"><summary>QA/QI Structure</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">QA calendar: monthly chart audits; quarterly fidelity reviews (ACTT TMACT, IPS scale); annual policy review</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">QI Committee: charter, membership, meeting minutes at least quarterly — ACHC surveys these documents</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Incident reporting: all critical incidents within 24 hours; root cause analysis for serious events</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Client satisfaction survey: administered, analyzed, results drive QI planning</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Report QI activities to governing body; document in meeting minutes for ACHC</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--red)"><summary>Staff Training System</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">OMHC-specific onboarding — not repurposed group practice orientation</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">ACTT-specific training required before any staff member goes into the community field</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">IPS Specialist certification funded and tracked for all Employment Specialists</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Annual training: trauma-informed care, MI, SMI, co-occurring, mandated reporting, safety, HIPAA</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">CEU tracking for all licensed staff; documentation maintained — Boards may audit</div></div>
+      </div></details>
+      <details style="border-left:3px solid var(--red)"><summary>Culture Transition</summary><div class="detail-body">
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Intentional shift from "my client" to "our client" — team-based ownership of all outcomes</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Weekly clinical consultation meetings across program lines to build genuine integration</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Leadership rounds: Clinical Director attends each program's team meeting at least monthly</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Peer Specialists as full team members in all clinical discussions — not a "nice to have"</div></div>
+        <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Celebrate milestones: jobs obtained, hospitalizations prevented, housing placements, community achievements</div></div>
+      </div></details>
+    </div>
+  </div>
+
+  <hr class="div">
+  <div class="callout" style="border-color:var(--teal);background:#eef8f6;color:var(--navy)">
+    <strong>Central Operating Principle:</strong> No system operates in isolation. The prescriber's note affects billing. The employment goal affects medication timing. The ACTT field visit generates a claim. Every clinical decision has a documentation consequence, and every documentation gap creates a compliance risk. Design your workflows so these connections are <em>explicit</em> — never assumed.
+  </div>
+</div>
+
+<!-- ══════════ P2: SYSTEMS MAP ══════════ -->
+<div id="p2" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--teal)">
+    <h2>Systems Integration Map</h2>
+    <p>Three layers showing how every service connects. Gaps between nodes are where clients fall through. Each handoff must be explicitly designed — not assumed.</p>
+  </div>
+  <div class="smap">
+    <div class="scol">
+      <div class="scol-hd" style="background:#eef3fa;color:var(--navy)">📥 Intake &amp; Assessment</div>
+      <div class="snode" style="border-left:3px solid var(--navy)"><div class="snode-t">Referral &amp; Pre-Screening</div><div class="snode-d">Level of care: outpatient, ACTT-eligible, or IPS. Screens for SMI, housing, insurance, prior auth.</div><span class="stag" style="background:#eef3fa;color:var(--navy)">ALL PROGRAMS</span></div>
+      <div class="arr-row">↓ Triggers intake + billing eligibility check</div>
+      <div class="snode" style="border-left:3px solid var(--navy)"><div class="snode-t">Comprehensive Intake Assessment</div><div class="snode-d">LCSW-C or Licensed Psychologist completes biopsychosocial. Determines if psych testing, prescriber eval, or ACTT referral is indicated.</div><span class="stag" style="background:#eef3fa;color:var(--navy)">LICENSURE TRIGGER</span></div>
+      <div class="arr-row">↓ Generates referrals to: Prescribing, Testing, Therapy, ACTT</div>
+      <div class="snode" style="border-left:3px solid var(--purple)"><div class="snode-t">Psychological Testing Referral</div><div class="snode-d">Licensed Psychologist only. Prior auth before scheduling. Results flow to: diagnostic clarity → treatment plan → prescriber → therapist → team.</div><span class="stag" style="background:#f5eef8;color:var(--purple)">PSYCHOLOGIST ONLY</span></div>
+      <div class="arr-row">↓ Testing report to full treatment team</div>
+      <div class="snode" style="border-left:3px solid var(--teal)"><div class="snode-t">Diagnosis &amp; ITP</div><div class="snode-d">Interdisciplinary Treatment Plan created with all providers. Every discipline signs: prescriber, therapist, ACTT, Employment Specialist.</div><span class="stag" style="background:#eef8f6;color:var(--teal)">TEAM DOCUMENT</span></div>
+    </div>
+    <div class="scol">
+      <div class="scol-hd" style="background:#eef8f6;color:var(--teal)">⚕️ Clinical Services</div>
+      <div class="snode" style="border-left:3px solid var(--teal)"><div class="snode-t">Psychotherapy Services</div><div class="snode-d">Individual, group, family by LCSW-C, LCSW, LGSW (supervised), LPC, LGPC (supervised), LMFT, LGMFT (supervised), PhD/PsyD. Frequency per ITP. Supervision documented for pre-licensed.</div><span class="stag" style="background:#eef8f6;color:var(--teal)">MULTI-LICENSURE</span></div>
+      <div class="arr-row">↓ Clinical concerns → prescriber warm handoff</div>
+      <div class="snode" style="border-left:3px solid var(--amber)"><div class="snode-t">Prescribing Services</div><div class="snode-d">Psychiatrist or CRNP-PMH. Psych eval, medication management, ITP co-authorship. Changes communicated via structured workflow to: therapist, ACTT team, pharmacy, family.</div><span class="stag" style="background:#fdf4ec;color:var(--amber)">PRESCRIBER-LED</span></div>
+      <div class="arr-row">↓ Medication changes → ACTT field team + pharmacy same day</div>
+      <div class="snode" style="border-left:3px solid var(--purple)"><div class="snode-t">ACTT Field-Based Services</div><div class="snode-d">Community visits for high-acuity SMI clients. Team: prescriber, RN, clinician, peer, vocational. Daily huddle drives assignments. Every contact documented and billed same day. 24/7 required.</div><span class="stag" style="background:#f5eef8;color:var(--purple)">24/7 REQUIRED</span></div>
+      <div class="arr-row">↓ Crisis → incident report + QA review + safety plan update</div>
+      <div class="snode" style="border-left:3px solid var(--gold)"><div class="snode-t">Supported Employment (IPS)</div><div class="snode-d">Employment Specialist embedded in team. Zero exclusion. Rapid job search. Coordinates with prescriber on work-compatible medication scheduling and side effect management.</div><span class="stag" style="background:#fdfaec;color:var(--gold)">IPS FIDELITY</span></div>
+      <div class="arr-row">↓ Employment → benefits counselor → DORS co-enrollment</div>
+      <div class="snode" style="border-left:3px solid var(--teal)"><div class="snode-t">Case Management / Care Coordination</div><div class="snode-d">Links services to community: housing, food, benefits, transportation. Required OMHC service. Distinct from therapy. Separately billable.</div><span class="stag" style="background:#eef8f6;color:var(--teal)">OMHC REQUIRED</span></div>
+    </div>
+    <div class="scol">
+      <div class="scol-hd" style="background:#fdf4ec;color:var(--amber)">📊 Quality &amp; Compliance</div>
+      <div class="snode" style="border-left:3px solid var(--amber)"><div class="snode-t">Billing &amp; Revenue Cycle</div><div class="snode-d">Every clinical contact generates a claim. OMHC uses distinct Medicaid codes. Requires: credential match, correct modifier, authorization, and signed note before submission.</div><span class="stag" style="background:#fdf4ec;color:var(--amber)">DAILY WORKFLOW</span></div>
+      <div class="arr-row">↓ Claims → denials → QI alert</div>
+      <div class="snode" style="border-left:3px solid var(--red)"><div class="snode-t">Incident Reporting &amp; Risk</div><div class="snode-d">All critical incidents reported within 24 hours per ACHC and Maryland OHCQ. Root cause analysis for serious events. OHCQ notification required for certain incident types.</div><span class="stag" style="background:#f8eeee;color:var(--red)">ACHC + COMAR</span></div>
+      <div class="arr-row">↓ Incidents feed QI committee agenda</div>
+      <div class="snode" style="border-left:3px solid var(--gold)"><div class="snode-t">QA / QI Committee</div><div class="snode-d">Monthly chart audits, quarterly fidelity reviews (ACTT TMACT, IPS scale), annual policy review. ACHC requires documented QI activities with meeting minutes as evidence.</div><span class="stag" style="background:#fdfaec;color:var(--gold)">ACHC REQUIRED</span></div>
+      <div class="arr-row">↓ QI findings → policy updates + staff training</div>
+      <div class="snode" style="border-left:3px solid var(--navy)"><div class="snode-t">Policy &amp; Procedure Management</div><div class="snode-d">All policies version-controlled. Annual review cycle. Staff attestation tracked. ACHC surveys P&amp;P compliance directly. COMAR drives specific content requirements.</div><span class="stag" style="background:#eef3fa;color:var(--navy)">LIVING DOCUMENTS</span></div>
+      <div class="arr-row">↓ Policy updates → staff training → competency verification</div>
+      <div class="snode" style="border-left:3px solid var(--teal)"><div class="snode-t">Outcomes &amp; Fidelity Tracking</div><div class="snode-d">PHQ-9/BASIS-24 outcomes, employment metrics (jobs, wages, 90-day retention), hospitalization rates, ACTT TMACT scores, IPS fidelity scores, client satisfaction.</div><span class="stag" style="background:#eef8f6;color:var(--teal)">DATA-DRIVEN</span></div>
+    </div>
+  </div>
+  <hr class="div">
+  <h3 class="sub-title">⚠️ Critical Handoffs — Must Be Explicitly Designed</h3>
+  <div class="hoff-grid">
+    <div class="hoff-card" style="border-left:3px solid var(--red)"><div class="hoff-t">Psych Testing Report → Prescriber</div><div class="hoff-d">Who receives it? How quickly? Meeting required? Does prescriber co-sign acknowledgment? Who tells the client?</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--red)"><div class="hoff-t">Therapist → Prescriber (Med Concern)</div><div class="hoff-d">Same-day warm handoff protocol. Who initiates? What's documented by both? Turnaround expectation? After-hours path?</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--red)"><div class="hoff-t">Medication Change → ACTT Field Team</div><div class="hoff-d">ACTT team lead notified before prescriber finalizes. Field staff need updated instructions same day.</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--red)"><div class="hoff-t">Hospitalization → Return Planning</div><div class="hoff-d">Who is notified at admission? Who does discharge coordination? Follow-up appointment within 72 hours of discharge.</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--amber)"><div class="hoff-t">Employment Start → Full Team Alert</div><div class="hoff-d">Prescriber increases monitoring. Therapist focuses on work adjustment. Benefits counselor notified. ITP updated.</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--navy)"><div class="hoff-t">Supervised Clinician → Supervisor</div><div class="hoff-d">LGPC/LGSW/LGMFT require documented supervision. Co-signature within defined timeframe. After-hours urgent path defined.</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--purple)"><div class="hoff-t">Psych Testing → Billing</div><div class="hoff-d">Prior auth confirmed before testing. Hours documented by component (admin, scoring, interpretation, report). Auth attached to claim.</div></div>
+    <div class="hoff-card" style="border-left:3px solid var(--gold)"><div class="hoff-t">ACTT Step-Down → Outpatient</div><div class="hoff-d">Outpatient clinician introduced before ACTT discharge. Overlapping service period. Employment Specialist continuity maintained.</div></div>
+  </div>
+</div>
+
+<!-- ══════════ P3: PRESCRIBING ══════════ -->
+<div id="p3" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--amber)">
+    <h2>Prescribing Systems &amp; Workflows</h2>
+    <p>Prescribers in an OMHC are embedded team members with defined interdisciplinary workflows — not independent practitioners who share a building.</p>
+  </div>
+  <h3 class="sub-title">Group Practice vs. OMHC: What Changes</h3>
+  <div class="tbl-wrap"><table class="data">
+    <thead><tr><th>Function</th><th>Group Practice (Before)</th><th>OMHC (After)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Treatment Planning</strong></td><td>Independent; informal notes with therapist</td><td>Co-authors Interdisciplinary Treatment Plan; signs ITP</td></tr>
+      <tr><td><strong>Documentation</strong></td><td>SOAP note to clinical standard</td><td>Note linked to ITP goals; includes coordination language; meets billing code specificity</td></tr>
+      <tr><td><strong>Communication</strong></td><td>Ad hoc, patient-driven</td><td>Structured: daily ACTT huddle, ITP meetings, defined warm handoff protocols</td></tr>
+      <tr><td><strong>Crisis Coverage</strong></td><td>Business hours; ER referral</td><td>24/7 prescriber consultation documented in on-call P&amp;P — ACTT requires this</td></tr>
+      <tr><td><strong>Billing</strong></td><td>Individual provider NPI</td><td>OMHC Type 2 NPI; different code set; documentation requirements differ by code</td></tr>
+      <tr><td><strong>PDMP / CRISP</strong></td><td>Individually managed</td><td>Maryland law requires CRISP check for every Schedule II–IV; documented in note</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="sub-title">Prescribing Workflows to Build</h3>
+  <div class="domain-grid">
+    <details style="border-left:3px solid var(--amber)"><summary>New Patient Psychiatric Evaluation</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Referral from intake clinician with completed biopsychosocial attached in EHR before scheduling</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Prior authorization obtained before appointment (commercial); Medicaid eligibility verified day of</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Prescriber reviews prior records, testing reports, and medications before session</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Note signed within 24 hours; ITP updated with prescriber goals within 72 hours</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Therapist and care coordinator notified of medication plan and follow-up schedule</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Lab orders placed if monitoring required; defined owner for tracking and follow-up</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--amber)"><summary>Medication Management (Follow-Up)</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Visit frequency by acuity: 30-day new/unstable; 60–90 day stable — documented in treatment plan</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">CRISP/PDMP checked every controlled substance visit; action documented in note (Maryland law)</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Side effect screening at every visit: AIMS for antipsychotics (baseline + annually minimum)</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Medication changes: ACTT notified same day; therapist notified next business day; pharmacy updated</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">E-prescribing required for controlled substances in Maryland (EPCS mandate)</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--red)"><summary>Warm Handoff: Therapist → Prescriber</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Therapist identifies medication concern during or after session</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Urgency triage: Urgent = same-day phone contact; Routine = EHR message, 24-hr prescriber response standard</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Both providers document the coordination in the client's chart</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">After-hours path defined in P&amp;P and posted for all clinical staff — not left to improvisation</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--navy)"><summary>Lab Monitoring &amp; Safety Protocols</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Standing order sets by medication class: clozapine ANC schedule, lithium/valproate levels, metabolic monitoring for antipsychotics</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Critical value protocol: escalation path for abnormal labs defined in P&amp;P — required for ACHC</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Medication reconciliation at every transition: hospitalization admission, discharge, step-up, step-down</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">AIMS assessments: baseline before antipsychotic initiation + annually; results in chart with attestation</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--purple)"><summary>Prescribing in ACTT: Field-Based Model</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Prescriber attends daily ACTT morning meeting — reviews overnight contacts, updates medication plans</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Field-based psychiatric visits in home, shelter, or community — documented as ACTT contact and billed same day</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">LAI protocol: who administers, where documented, observation period, who monitors post-injection</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">24/7 on-call: prescriber consultation at all hours; backup chain defined; documented in ACTT P&amp;P</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">TMACT fidelity: prescriber hours must meet the fidelity standard for the team's caseload size</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--gold)"><summary>Prescribing &amp; Supported Employment</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Ask about work schedule at every medication visit — timing and side effects affect job performance</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Document work goal endorsement: "medication plan supports client's work capacity and employment goal"</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Increase monitoring frequency when client starts new job — sedation, tremor, cognition matter in work context</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Standard template for accommodation letters — reduces bottleneck and ensures consistent documentation</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Coordinate with benefits counselor when client starts earning: Medicaid continuation, SSDI work incentives</div></div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ══════════ P4: PSYCH TESTING ══════════ -->
+<div id="p4" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--purple)">
+    <h2>Psychological Testing Systems</h2>
+    <p>Testing in an OMHC feeds treatment planning, prescribing, and psychotherapy. It is not a standalone referral — it must be integrated into the care team's workflow.</p>
+  </div>
+  <div class="callout" style="border-color:var(--purple);background:#f9f4fd;color:var(--navy)">
+    <strong>Maryland Law:</strong> Psychological testing may only be administered, scored, and interpreted by a Licensed Psychologist (PhD/PsyD) or under their direct supervision. This is a scope-of-practice boundary that must appear in your P&amp;P, credentialing files, and supervision agreements.
+  </div>
+  <h3 class="sub-title">Testing Referral &amp; Workflow — 7 Steps</h3>
+  <div class="flow">
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--navy)">1</div><div class="fconn"></div></div><div class="fcontent"><h4>Clinical Indication &amp; Referral</h4><p>Intake clinician or treating therapist identifies need. Clinical question specified: diagnostic clarification, treatment planning, disability documentation, or neuropsychological concerns.</p><div class="ftags"><span class="ftag" style="background:#eef3fa;color:var(--navy)">LCSW-C / Psychiatrist / LCSW</span><span class="ftag" style="background:#f8eeee;color:var(--red)">Prior Auth Required — Obtain BEFORE Scheduling</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--purple)">2</div><div class="fconn"></div></div><div class="fcontent"><h4>Pre-Testing Review (Psychologist)</h4><p>Licensed Psychologist reviews referral question, prior records, diagnoses, and medications. Selects battery: cognitive (WAIS-IV), personality/diagnostic (MMPI-3, PAI), achievement (WIAT-4), neuropsychological, or trauma-focused.</p><div class="ftags"><span class="ftag" style="background:#f5eef8;color:var(--purple)">Licensed Psychologist Only</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--purple)">3</div><div class="fconn"></div></div><div class="fcontent"><h4>Administration</h4><p>Administered by Licensed Psychologist or supervised Psychologist Assistant. Standardized conditions. Accessibility accommodations documented. Supervision of PA documented in chart.</p><div class="ftags"><span class="ftag" style="background:#f5eef8;color:var(--purple)">PhD/PsyD or Supervised PA</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--purple)">4</div><div class="fconn"></div></div><div class="fcontent"><h4>Scoring, Interpretation &amp; Report</h4><p>Licensed Psychologist interprets all results. Report: referral question, history, instruments, behavioral observations, domain results, integrated interpretation, diagnostic formulation, specific clinical recommendations.</p><div class="ftags"><span class="ftag" style="background:#f5eef8;color:var(--purple)">Psychologist Only — Cannot Delegate</span><span class="ftag" style="background:#fdfaec;color:var(--gold)">Within 14 Business Days</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--teal)">5</div><div class="fconn"></div></div><div class="fcontent"><h4>Feedback Session with Client</h4><p>Psychologist reviews results with client in accessible language. Family/supports included with consent. Separately billable service.</p><div class="ftags"><span class="ftag" style="background:#eef8f6;color:var(--teal)">Separately Billable</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--teal)">6</div><div class="fconn"></div></div><div class="fcontent"><h4>Team Distribution &amp; ITP Update</h4><p>Report to: referring clinician, prescriber, ACTT team lead. ITP updated within 10 days. All receiving clinicians document receipt in chart.</p><div class="ftags"><span class="ftag" style="background:#eef8f6;color:var(--teal)">Full Team Notification</span><span class="ftag" style="background:#eef3fa;color:var(--navy)">ITP Revised Within 10 Days</span></div></div></div>
+    <div class="fstep"><div class="fline"><div class="fcircle" style="background:var(--gold)">7</div></div><div class="fcontent"><h4>Records, Security &amp; Re-evaluation</h4><p>Test protocols retained separately from medical record with restricted access. Psychologist controls access. Raw data released only to licensed psychologists (APA ethics + Maryland law). Re-evaluation typically 2–3 years for cognitive.</p><div class="ftags"><span class="ftag" style="background:#fdfaec;color:var(--gold)">Separate Records Policy Required</span></div></div></div>
+  </div>
+  <h3 class="sub-title">Testing Billing Codes (CPT)</h3>
+  <div class="tbl-wrap"><table class="data">
+    <thead><tr><th>CPT Code</th><th>Description</th><th>Who Bills</th><th>Maryland Medicaid Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>96130</strong></td><td>Psychological testing evaluation, first hour (psychologist)</td><td>Licensed Psychologist</td><td>Verify MCO coverage; prior auth typically required</td></tr>
+      <tr><td><strong>96131</strong></td><td>Each additional hour (psychologist)</td><td>Licensed Psychologist</td><td>Document time by component in note</td></tr>
+      <tr><td><strong>96136</strong></td><td>Psychological testing, first hour (technician/PA)</td><td>Under Psychologist supervision</td><td>Supervision documentation required to bill</td></tr>
+      <tr><td><strong>96137</strong></td><td>Each additional hour (technician)</td><td>Under Psychologist supervision</td><td>Same as above</td></tr>
+      <tr><td><strong>96132</strong></td><td>Neuropsychological testing, first hour</td><td>Licensed Psychologist</td><td>Prior auth almost always required; submit clinical justification upfront</td></tr>
+      <tr><td><strong>96133</strong></td><td>Neuropsychological, each additional hour</td><td>Licensed Psychologist</td><td>Document time breakdown: admin, scoring, interpretation, report writing</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ══════════ P5: THERAPY & LICENSURE ══════════ -->
+<div id="p5" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--teal)">
+    <h2>Psychotherapy &amp; Maryland Licensure Levels</h2>
+    <p>Each licensure level has different scope, supervision requirements, and billing implications that must be operationalized in your policies and EHR.</p>
+  </div>
+  <h3 class="sub-title">Maryland Licensure Reference</h3>
+  <div class="tbl-wrap"><table class="data">
+    <thead><tr><th>License</th><th>Full Name</th><th>Education</th><th>Supervision Required</th><th>Scope in OMHC</th><th>Billing</th><th>Key Notes</th></tr></thead>
+    <tbody>
+      <tr><td><span class="lbadge" style="background:#1e2d4a;color:white">LCSW-C</span></td><td>Licensed Certified Social Worker – Clinical</td><td>MSW + 3,000 post-MSW clinical hours</td><td>None required</td><td>Diagnosis, all therapy, supervision of LGSW/LCSW, Clinical Director</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Required for OMHC Clinical Director per COMAR. Can supervise LGSW toward LCSW-C.</td></tr>
+      <tr><td><span class="lbadge" style="background:#2e4470;color:white">LCSW</span></td><td>Licensed Certified Social Worker</td><td>MSW + 2 years experience</td><td>None for standard practice</td><td>Diagnosis, therapy, case management</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Verify with each payer — some require LCSW-C for independent billing on their panel.</td></tr>
+      <tr><td><span class="lbadge" style="background:#4a8ac0;color:white">LGSW</span></td><td>Licensed Graduate Social Worker</td><td>MSW</td><td>LCSW-C supervisor; documented hours + supervision log</td><td>Therapy under supervision; diagnosis under supervisor attestation</td><td><span class="lbadge" style="background:#fdf4ec;color:var(--amber)">SUPERVISED</span></td><td>Supervisor co-signs notes. Bill under OMHC NPI. Track hours toward LCSW-C.</td></tr>
+      <tr><td><span class="lbadge" style="background:#1d7a6e;color:white">LPC</span></td><td>Licensed Professional Counselor</td><td>Master's in counseling + 3,000 supervised hours</td><td>None required</td><td>All therapy, diagnosis; Board-approved supervisor status needed to supervise LGPC</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Verify Maryland Medicaid MCO credentialing — some MCOs have had LPC billing limitations.</td></tr>
+      <tr><td><span class="lbadge" style="background:#2aaa99;color:white">LGPC</span></td><td>Licensed Graduate Professional Counselor</td><td>Master's in counseling</td><td>LPC or Board-approved supervisor; 3,000 hours toward LPC</td><td>Therapy under supervision; diagnosis under supervisor attestation</td><td><span class="lbadge" style="background:#fdf4ec;color:var(--amber)">SUPERVISED</span></td><td>Supervisor co-signs notes. Board approval of supervisor required. Track hours toward LPC.</td></tr>
+      <tr><td><span class="lbadge" style="background:#7b4fb0;color:white">LMFT</span></td><td>Licensed Marriage &amp; Family Therapist</td><td>Master's in MFT + 1,000 client hours post-graduate</td><td>None required</td><td>Individual, couples, family therapy; diagnosis</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Verify Maryland Medicaid MCO credentialing separately — LMFT coverage varies by MCO.</td></tr>
+      <tr><td><span class="lbadge" style="background:#9b7cd0;color:white">LGMFT</span></td><td>Licensed Graduate Marriage &amp; Family Therapist</td><td>Master's in MFT</td><td>LMFT supervisor; hours toward LMFT</td><td>Therapy under supervision; couples and family work</td><td><span class="lbadge" style="background:#fdf4ec;color:var(--amber)">SUPERVISED</span></td><td>Supervisor co-signs. Track hours toward LMFT.</td></tr>
+      <tr><td><span class="lbadge" style="background:#1c1f26;color:white">PhD/PsyD</span></td><td>Licensed Psychologist</td><td>Doctoral degree + 2-year supervised internship/postdoc</td><td>None required</td><td>All therapy, psychological testing, neuropsychological evaluation, supervision of PAs</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Only license authorized to administer and interpret psychological tests in Maryland.</td></tr>
+      <tr><td><span class="lbadge" style="background:#a07a20;color:white">CRNP-PMH</span></td><td>CRNP – Psychiatric Mental Health</td><td>Master's/DNP + PMHNP board certification</td><td>Collaborative agreement with MD physician (verify current MD law)</td><td>Prescribing, psych eval, medication management, therapy if trained</td><td><span class="lbadge" style="background:#eef8f6;color:var(--teal)">INDEPENDENT</span></td><td>Collaborative agreement documented on file. Maryland NP authority continues to evolve — verify COMAR.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout" style="border-color:var(--red);background:#fdf4f4;color:var(--navy)">
+    <strong>Critical OMHC &amp; ACHC Requirement:</strong> Clinical supervision is a regulated activity in Maryland. You must have written supervision agreements, documented supervision logs with signatures, and supervision session notes. ACHC and OHCQ will review supervision documentation during surveys. Supervision by an unqualified supervisor creates licensure jeopardy for the supervisee.
+  </div>
+  <h3 class="sub-title">Supervision Infrastructure to Build</h3>
+  <div class="domain-grid">
+    <details style="border-left:3px solid var(--navy)"><summary>Documentation Requirements</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Written supervision agreement for every supervisee: goals, frequency, format, evaluation criteria, emergency coverage path</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Supervision log: date, duration, cases discussed, supervisee signature, supervisor signature — in personnel AND supervision file</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Individual supervision minimum 1 hour/week for pre-licensed staff; group supervision additional — not a substitute</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Co-signature in EHR: supervisor co-signs within 72 hours; billing held until co-signed</div></div>
+      <div class="ai"><div class="adot" style="background:var(--navy)"></div><div class="atxt">Supervisor credentialing: document Board approval to supervise (Boards of Social Work, Counselors, MFT Examiners)</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--teal)"><summary>Therapy Service Workflows</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Individual therapy: note documents progress toward ITP goals, not just session content summary</div></div>
+      <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Group therapy: group note + individual participation note per client; group curriculum on file; payer group size limits</div></div>
+      <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Family therapy: all participants documented; adult consent obtained; billing code differs from individual</div></div>
+      <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">Telehealth: Maryland originating site documentation; separate telehealth consent; audio-only policy separate from video</div></div>
+      <div class="ai"><div class="adot" style="background:var(--teal)"></div><div class="atxt">After-hours: pre-licensed clinicians must have a clear documented path to reach supervisor for urgent clinical questions</div></div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ══════════ P6: ACTT ══════════ -->
+<div id="p6" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--purple)">
+    <h2>ACTT Program Setup</h2>
+    <p>Maryland ACTT requires BHA program approval before billing. Complies with COMAR 10.21.17. Contact BHTAC (free) before building your program.</p>
+  </div>
+  <div class="callout" style="border-color:var(--purple);background:#f9f4fd;color:var(--navy)">
+    <strong>First Step:</strong> Contact Maryland BHA's Behavioral Health Technical Assistance Center (BHTAC) before building your ACTT program. They provide free consultation on approval, fidelity, and startup. ACTT programs must be licensed through OHCQ under COMAR 10.21.17 and receive BHA program approval before billing ACTT-specific codes.
+  </div>
+  <div class="domain-grid">
+    <details style="border-left:3px solid var(--purple)"><summary>Team Composition (TMACT Fidelity)</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Team Leader: licensed clinician (LCSW-C or LPC); responsible for operations, treatment planning, fidelity compliance</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Psychiatrist or CRNP-PMH: required by COMAR; hours sufficient for caseload; field availability required for TMACT</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Registered Nurse: medication administration, health monitoring, LAI coordination, medical provider liaison</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Vocational Specialist / IPS Employment Specialist: embedded — not a referral; participates in daily meeting</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Peer Specialist/Recovery Coach: required in TMACT fidelity; full team member with lived experience</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Co-occurring trained clinician: TMACT strongly recommends SUD specialist or all-staff co-occurring training</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Caseload: max 10 clients per FTE at full fidelity; rotation-based visit assignment</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--purple)"><summary>Daily Operations</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Daily morning meeting (full team): overnight contacts, hospitalizations, crises; day's visit assignments; prescriber participates</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Rotation-based visits: every team member knows every client — not caseload-based (critical fidelity principle)</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Same-day documentation: all field contacts in EHR by end of day; billed same day service delivered</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">24/7 on-call: all roles covered; backup chain for each position; prescriber reachable at all hours</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Weekly treatment review: all clients at least monthly; high-acuity clients weekly</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--purple)"><summary>Referral, Enrollment &amp; MOUs</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Admission criteria aligned with TMACT and BHA: multiple hospitalizations, SMI diagnosis, functional impairment, failed outpatient</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Referral sources: hospital discharge planners, courts (NGRI, conditional release), jails, community mental health</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">MOUs executed before opening: hospitals, crisis centers, jails, housing authorities, pharmacies</div></div>
+      <div class="ai"><div class="adot" style="background:var(--purple)"></div><div class="atxt">Step-down criteria: 12+ months stability; formal overlapping transition plan; outpatient clinician introduced before ACTT discharge</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--red)"><summary>Crisis Protocol</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">24/7 crisis response is a defining ACTT function — on-call staff can respond in community within defined timeframe</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Escalation chain documented: on-call clinician → Team Leader → prescriber → hospital → 911; each step has defined triggers</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">All crisis contacts documented; Team Leader reviews next morning; prescriber notified if medication-related</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Hospitalization: ACTT contacts inpatient unit during stay; participates in discharge planning; follow-up visit within 24 hours of discharge</div></div>
+      <div class="ai"><div class="adot" style="background:var(--red)"></div><div class="atxt">Crisis event triggers incident report; serious events trigger root cause analysis at next QI meeting</div></div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ══════════ P7: EMPLOYMENT ══════════ -->
+<div id="p7" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--amber)">
+    <h2>Supported Employment — IPS Model</h2>
+    <p>Individual Placement and Support (IPS) embedded in the clinical team. BHA program approval and Maryland DORS partnership required before billing.</p>
+  </div>
+  <div class="callout" style="border-color:var(--amber);background:#fdf8f0;color:var(--navy)">
+    <strong>Zero Exclusion Policy:</strong> Any client who wants to work is eligible for IPS — regardless of symptom severity, substance use history, incarceration history, or perceived "job readiness." Pre-vocational readiness programs are not IPS. Rapid job search begins within 30 days of enrollment.
+  </div>
+  <div class="domain-grid">
+    <details style="border-left:3px solid var(--amber)"><summary>IPS Clinical Integration</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment Specialist attends ACTT morning meeting and outpatient team meetings — embedded, not a referral silo</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Every client asked about work preferences at intake; answer documented in biopsychosocial</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment goal in every willing client's ITP; reviewed as standing agenda item at every ITP meeting</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Prescriber asks about work schedule at every medication visit; documents endorsement of employment goal</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment Specialist caseload: 20–25 clients at full IPS fidelity</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">IPS fidelity self-assessment semi-annually using IPS Fidelity Scale (25-item); results shared with QI committee</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--amber)"><summary>DORS &amp; Employer Development</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Maryland DORS partnership: enroll all eligible clients; VR counselor participates in shared client ITP meetings</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employment Specialists spend 65%+ of time in community doing employer development — IPS fidelity requirement</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Employer relationship tracking system: contact log, job types, relationship status</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Disclosure protocol: client-directed; no diagnosis disclosure without explicit documented consent</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--amber)"><summary>Benefits Counseling</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Benefits analysis before every job placement — address SSI/SSDI concerns before they become barriers</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">WIPA counselors engaged as team resource; referral pathway documented in P&amp;P</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Maryland Medicaid continuation: educate clients on 1619(b) provisions before they start working</div></div>
+      <div class="ai"><div class="adot" style="background:var(--amber)"></div><div class="atxt">Benefits analysis documented in EHR; updated when work status changes</div></div>
+    </div></details>
+    <details style="border-left:3px solid var(--gold)"><summary>Outcomes Tracking</summary><div class="detail-body">
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Track monthly: clients enrolled, working, competitive jobs obtained, hours worked, wages earned</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">90-day job retention rate: standard IPS outcome metric; tracked for every job obtained</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">DORS successful closures (26-week employment) reported to VR and used in fidelity review</div></div>
+      <div class="ai"><div class="adot" style="background:var(--gold)"></div><div class="atxt">Report outcomes to QI committee quarterly; benchmark against national IPS fidelity standards</div></div>
+    </div></details>
+  </div>
+</div>
+
+<!-- ══════════ P8: ACHC ══════════ -->
+<div id="p8" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--gold)">
+    <h2>ACHC Accreditation Framework</h2>
+    <p>Use the checkboxes below as a live gap-tracking tool. Check off items as your team completes them. Priority levels: <strong style="color:var(--red)">CRITICAL</strong> · <strong style="color:var(--gold)">HIGH</strong> · <strong style="color:var(--teal)">MED</strong></p>
+  </div>
+  <div class="callout" style="border-color:var(--gold);background:#fdfaec;color:var(--navy)">
+    <strong>First Step:</strong> Purchase the current ACHC Behavioral Health Standards manual from achc.org. Designate one Accreditation Coordinator. Schedule ACHC's pre-survey consultation early — available to new applicants.
+  </div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdfaec;color:var(--gold)">📋 Organizational Standards</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Governing body structure documented with bylaws or charter</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Org chart current and accessible to all staff</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Corporate compliance plan with designated compliance officer</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Mission, vision, and values statement developed and posted</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Annual budget process and financial oversight documented</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4ec;color:var(--amber)">👥 Human Resources</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Job descriptions for every position; signed by employee at hire</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Credentialing and privileging process for all licensed staff and prescribers</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Background check policy: OIG exclusion, CACI, sex offender registry, criminal background</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Orientation curriculum with competency verification sign-off</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Annual training calendar: safety, HIPAA, abuse/neglect reporting, emergency protocols</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Performance evaluation process with documented annual reviews</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#eef8f6;color:var(--teal)">📁 Clinical Records</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Record content requirements defined in P&amp;P: what must be in every chart at every stage</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Biopsychosocial assessment template meets ACHC content requirements</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">ITP with goals, objectives, frequency, responsible party, client signature</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Informed consent set: treatment, HIPAA, grievance rights, telehealth, releases</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Records retention: Maryland 5-year minimum; 7 years for minors or until age 21</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Late documentation policy: completion timeframes + consequences for non-compliance</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Record amendment policy: no deletions; addenda with date and author</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#f5eef8;color:var(--purple)">🔒 Rights &amp; Safety</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Client rights policy: written, provided at intake, available in client's language, posted in facility</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Grievance policy and procedure with defined timelines and appeal rights</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Abuse/neglect/exploitation reporting policy with mandatory reporter training documented</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Safety plan process: who completes, how stored, when updated, how accessed in crisis</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Emergency/disaster preparedness plan with staff training documentation</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Cultural and linguistic competency plan; language access and interpreter policy</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">ADA compliance: physical access and programmatic accessibility plan</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#eef3fa;color:var(--navy)">📊 QA / QI</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">QI program description: goals, activities, responsible parties, reporting structure</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">QI committee: charter, membership, meeting minutes — at least quarterly</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Performance measures defined with targets: clinical outcomes, safety, satisfaction, access</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Chart audit tool + frequency + corrective action pathway documented</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Incident reporting: all critical incidents documented, trended, acted upon</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Client satisfaction survey: administered, analyzed, results fed into QI planning</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#f0f3f7;color:var(--navy)">🏥 Service Delivery</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Each service type has P&amp;P covering referral, admission, discharge, and documentation</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Crisis services policy: 24/7 access, response protocol, follow-up requirements</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Medication management policy: prescribing authority, reconciliation, monitoring, self-administration</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Co-occurring disorders: integrated treatment model in P&amp;P; staff trained and documented</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Telehealth policy: informed consent, technology standards, when in-person is required</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Infection control and environmental safety standards met and documented</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ P9: MARYLAND ══════════ -->
+<div id="p9" class="tab-panel">
+  <div class="sec-head" style="border-color:var(--red)">
+    <h2>Maryland State Compliance</h2>
+    <p>Governed by COMAR, the Behavioral Health Administration (BHA), and the Office of Health Care Quality (OHCQ). Always verify current regulations — Maryland updates these periodically.</p>
+  </div>
+  <div class="callout" style="border-color:var(--red);background:#fdf4f4;color:var(--navy)">
+    <strong>Primary COMAR References:</strong> 10.21.20 (Outpatient Mental Health Centers) · 10.21.17 (Psychiatric Emergency Programs) · Contact OHCQ at <strong>410-402-8000</strong> to begin your OMHC licensure and request a pre-application meeting.
+  </div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">📜 OMHC Licensure (COMAR 10.21.20)</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Application to OHCQ submitted; site inspection required before seeing clients under OMHC license</div><span class="cpill" style="background:#f8eeee;color:var(--red)">FIRST STEP</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Clinical Director meets COMAR qualification: LCSW-C, Licensed Psychologist, MD, or equivalent</div><span class="cpill" style="background:#f8eeee;color:var(--red)">REQUIRED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Physical space meets OHCQ: client privacy, ADA accessibility, waiting area, record storage</div><span class="cpill" style="background:#f8eeee;color:var(--red)">REQUIRED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">OMHC must provide or arrange for psychiatric services — cannot be therapy-only under OMHC license</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Unannounced surveys are possible — maintain compliance continuously, not just for scheduled visits</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">KNOW IT</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">⚖️ Mandated Reporting &amp; Legal Duties</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Child abuse/neglect: all staff are mandatory reporters in Maryland; report to local DSS or 1-800-332-6347</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Vulnerable adult reporting: mandatory for adults with disabilities who cannot self-protect</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Duty to warn: Maryland duty to protect identified third parties; written P&amp;P required</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Involuntary commitment: emergency petition process; staff trained and process documented in P&amp;P</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Maryland False Claims Act applies to Medicaid billing; billing staff trained and policy documented</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">🔐 Confidentiality: Maryland + HIPAA</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Maryland Mental Health Confidentiality Law (HG 4-307): stricter than HIPAA; separate written consent required for mental health record disclosure</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">SUD records: 42 CFR Part 2 applies if you receive federal SUD funding; stricter consent than HIPAA</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Minor confidentiality: Maryland minors 16+ can consent to own mental health treatment; parents may not automatically access records</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">HIPAA Privacy Officer and Security Officer designated and documented</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">BAAs in place with all vendors: EHR, billing company, cloud storage, telehealth platform, IT support</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Breach notification policy: HIPAA 60-day requirement; Maryland law may require additional notifications</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">💊 Maryland Prescribing Laws</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">PDMP via Maryland CRISP: prescribers must check for every Schedule II–IV prescription; result documented in note — required by law</div><span class="cpill" style="background:#f8eeee;color:var(--red)">LAW</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">E-prescribing for controlled substances (EPCS) required in Maryland; paper Rx restricted</div><span class="cpill" style="background:#f8eeee;color:var(--red)">LAW</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">DEA registration: each prescriber's registration; practice address must match prescribing location</div><span class="cpill" style="background:#f8eeee;color:var(--red)">REQUIRED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">NP collaborative agreement: CRNP-PMH must have documented collaborative agreement with MD physician; verify current MD law</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Buprenorphine: verify current BHA requirements for SUD integration in OMHC setting</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">💰 Maryland Medicaid (MDH / HealthChoice)</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Enroll organization as OMHC with Maryland Medicaid — separate from individual provider enrollment</div><span class="cpill" style="background:#f8eeee;color:var(--red)">FIRST STEP</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Maryland HealthChoice MCO contracts: enroll with each MCO separately (BCBS, Aetna Better, CareFirst, UHC, Jai Medical, Priority)</div><span class="cpill" style="background:#f8eeee;color:var(--red)">REQUIRED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">ACTT billing: BHA program approval required before billing; specific codes authorized by BHA</div><span class="cpill" style="background:#f8eeee;color:var(--red)">REQUIRED</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">IPS billing (H2023): BHA-approved IPS program required; DORS co-enrollment affects funding braiding</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Sliding fee scale: Maryland OMHCs must have sliding scale for uninsured clients</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Timely filing: Maryland Medicaid 12 months; document per-MCO timely filing limits separately</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">KNOW IT</span></div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-head" style="background:#fdf4f4;color:var(--red)">👩‍💼 Maryland Licensure Boards</div>
+      <div class="comp-body">
+        <div class="citem"><input type="checkbox"><div class="ctxt">Verify all provider licenses active via Maryland DHMH license lookup before hire and at each renewal</div><span class="cpill" style="background:#f8eeee;color:var(--red)">CRITICAL</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Board of Social Work Examiners: LCSW-C supervisors must meet Board requirements to serve as approved supervisors</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Board of Professional Counselors: LGPC supervisors must have Board approval; supervisor approval process completed</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Board of Examiners of Psychologists: PA supervision documentation requirements met</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">Board of Nursing: CRNP collaborative agreement on file; scope verified with current Maryland law</div><span class="cpill" style="background:#fdf0cc;color:var(--gold)">HIGH</span></div>
+        <div class="citem"><input type="checkbox"><div class="ctxt">CEU tracking: maintain documentation for all licensed staff — Maryland Boards may audit</div><span class="cpill" style="background:#eef8f6;color:var(--teal)">MED</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="callout" style="border-color:var(--navy);background:#f0f3f8;margin-top:20px;color:var(--navy)">
+    <strong>Recommended First Actions:</strong><br><br>
+    <strong>1.</strong> Call OHCQ (410-402-8000) to request a pre-application meeting before filing your OMHC application.<br>
+    <strong>2.</strong> Engage a Maryland healthcare attorney to review consent forms and confidentiality policies against HG statutes and COMAR.<br>
+    <strong>3.</strong> Contact Maryland BHA's BHTAC for ACTT and IPS program approval guidance — free consultation available.<br>
+    <strong>4.</strong> Register all prescribers with Maryland CRISP for PDMP access before seeing any clients with medication management needs.
+  </div>
+</div>
+
+</div><!-- /panels -->
+</body>
+</html>
